@@ -11,14 +11,18 @@ module Tokenizer (
 
     toLine :: String -> Line
     toLine xs
-        | "require "  `isPrefixOf` rest = Require nested rest
-        | "//"        `isPrefixOf` rest = Comment nested rest
-        | "/*"        `isPrefixOf` rest = CSSComment nested rest
-        | "template " `isPrefixOf` rest = TemplateStart nested rest
-        | "let "      `isPrefixOf` rest = LetDeclaration nested rest
-        | "const "    `isPrefixOf` rest = ConstDeclaration nested rest
+        | isPrefix "require "   = construc Require
+        | isPrefix "include "   = construc Include
+        | isPrefix "//"         = construc Comment
+        | isPrefix "/*"         = construc CSSComment
+        | isPrefix "function "  = construc FunctionStart
+        | isPrefix "component " = construc ComponentStart
+        | isPrefix "let "       = construc LetDeclaration
+        | isPrefix "const "     = construc ConstDeclaration
         | otherwise = CodeLine nested rest
         where rest = rmWhile (== ' ') xs
               nested = length xs - length rest
+              isPrefix = (`isPrefixOf` rest)
+              construc x = x nested rest
 
     tokenize = id

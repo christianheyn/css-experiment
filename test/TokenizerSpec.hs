@@ -28,6 +28,36 @@ spec = do
                 expected = Require 4 "require \"./file.hcss\""
             actual `shouldBe` expected
 
+        it "gives Line type Include" $ do
+            let inputStr = "    include \"./file.hcss\""
+                actual = toLine inputStr
+                expected = Include 4 "include \"./file.hcss\""
+            actual `shouldBe` expected
+
+        it "gives Line type FunctionStart" $ do
+            let inputStr = "    function abc()"
+                actual = toLine inputStr
+                expected = FunctionStart 4 "function abc()"
+            actual `shouldBe` expected
+
+        it "gives Line type LetDeclaration" $ do
+            let inputStr = "   let a ="
+                actual = toLine inputStr
+                expected = LetDeclaration 3 "let a ="
+            actual `shouldBe` expected
+
+        it "gives Line type ConstDeclaration" $ do
+            let inputStr = "   const a ="
+                actual = toLine inputStr
+                expected = ConstDeclaration 3 "const a ="
+            actual `shouldBe` expected
+
+        it "gives Line type ComponentStart" $ do
+            let inputStr = "   component a"
+                actual = toLine inputStr
+                expected = ComponentStart 3 "component a"
+            actual `shouldBe` expected
+
         it "nested level can be 0" $ do
             let inputStr = "<section>"
                 actual = toLine inputStr

@@ -1,0 +1,12 @@
+{
+    "saveAndRun": {
+        "commands": [
+          {
+            "match": ".hs",
+            "cmd": "stack test",
+            "useShortcut": false,
+            "silent": false
+          }
+        ]
+      }
+}

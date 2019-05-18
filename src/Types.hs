@@ -10,9 +10,11 @@ type LeftTrimmed = String
 data Line =
       CodeLine         NestingLevel LeftTrimmed
     | Require          NestingLevel LeftTrimmed
+    | Include          NestingLevel LeftTrimmed
     | Comment          NestingLevel LeftTrimmed
     | CSSComment       NestingLevel LeftTrimmed
-    | TemplateStart    NestingLevel LeftTrimmed
+    | FunctionStart    NestingLevel LeftTrimmed
+    | ComponentStart   NestingLevel LeftTrimmed
     | LetDeclaration   NestingLevel LeftTrimmed
     | ConstDeclaration NestingLevel LeftTrimmed
     | FileStart        NestingLevel FilePath
