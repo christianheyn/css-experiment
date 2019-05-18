@@ -5,7 +5,7 @@ module TokenizerSpec (spec) where
 import Test.Hspec
 import qualified Data.Text.Lazy as L
 import Types
-import Tokenizer (toLine ,tokenize)
+import Tokenizer (toLine , toLines, tokenize)
 
 spec :: Spec
 spec = do
@@ -62,4 +62,20 @@ spec = do
             let inputStr = "<section>"
                 actual = toLine inputStr
                 expected = CodeLine 0 "<section>"
+            actual `shouldBe` expected
+
+    describe "toLines" $ do
+        it "works with empty input" $ do
+            let inputStr = ""
+                actual = toLines inputStr
+                expected = [] :: [Line]
+            actual `shouldBe` expected
+
+        it "splits input text to Line" $ do
+            let inputStr = " code\n  require"
+                actual = toLines inputStr
+                expected = [
+                      CodeLine 1 "code"
+                    , CodeLine 2 "require"
+                    ]
             actual `shouldBe` expected

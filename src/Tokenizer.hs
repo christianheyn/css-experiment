@@ -2,6 +2,7 @@
 
 module Tokenizer (
       toLine
+    , toLines
     , tokenize) where
 
     import qualified Data.Text.Lazy as L
@@ -28,5 +29,9 @@ module Tokenizer (
               nested = L.length xs - L.length rest
               isPrefix = (`L.isPrefixOf` rest)
               construc x = x nested rest
+
+    toLines :: L.Text -> [Line]
+    toLines input = map toLine ls
+        where ls = L.lines input
 
     tokenize = id
