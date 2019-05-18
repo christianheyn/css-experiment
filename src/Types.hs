@@ -3,9 +3,10 @@
 module Types where
 
 import qualified Data.Text.Lazy as L
+import qualified Data.Int as I
 
-type NestingLevel = Int
-type LeftTrimmed = String
+type NestingLevel = I.Int64
+type LeftTrimmed = L.Text
 
 data Line =
       CodeLine         NestingLevel LeftTrimmed

@@ -4,12 +4,16 @@ module Tokenizer (
       toLine
     , tokenize) where
 
+    import qualified Data.Text.Lazy as L
     import Types
     import Data.List (isPrefixOf)
 
-    rmWhile fn l@(x:xs) = if fn x then rmWhile fn xs else l
+    rmWhile :: (Char -> Bool) -> L.Text -> L.Text
+    rmWhile fn s = if fn x then rmWhile fn xs else s
+            where x = L.head s
+                  xs = L.tail s
 
-    toLine :: String -> Line
+    toLine :: L.Text -> Line
     toLine xs
         | isPrefix "require "   = construc Require
         | isPrefix "include "   = construc Include
@@ -19,10 +23,10 @@ module Tokenizer (
         | isPrefix "component " = construc ComponentStart
         | isPrefix "let "       = construc LetDeclaration
         | isPrefix "const "     = construc ConstDeclaration
-        | otherwise = CodeLine nested rest
+        | otherwise             = construc CodeLine
         where rest = rmWhile (== ' ') xs
-              nested = length xs - length rest
-              isPrefix = (`isPrefixOf` rest)
+              nested = L.length xs - L.length rest
+              isPrefix = (`L.isPrefixOf` rest)
               construc x = x nested rest
 
     tokenize = id
