@@ -9,8 +9,7 @@ import Tokenizer (
       toLine
     , toLines
     , tokenize
-    , toBlocks
-    , prettyShowAll)
+    , toBlocks)
 
 spec :: Spec
 spec = do
