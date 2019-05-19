@@ -3,9 +3,11 @@
 module Tokenizer (
       toLine
     , toLines
-    , tokenize) where
+    , tokenize
+    , toBlocks) where
 
     import qualified Data.Text.Lazy as L
+    import qualified Data.Int as I
     import Types
     import Data.List (isPrefixOf)
 
@@ -16,22 +18,34 @@ module Tokenizer (
 
     toLine :: L.Text -> Line
     toLine xs
-        | isPrefix "require "   = construc Require
-        | isPrefix "include "   = construc Include
-        | isPrefix "//"         = construc Comment
-        | isPrefix "/*"         = construc CSSComment
-        | isPrefix "function "  = construc FunctionStart
-        | isPrefix "component " = construc ComponentStart
-        | isPrefix "let "       = construc LetDeclaration
-        | isPrefix "const "     = construc ConstDeclaration
-        | otherwise             = construc CodeLine
+        | isPrefix "require "   = withLineType Require
+        | isPrefix "include "   = withLineType Include
+        | isPrefix "//"         = withLineType Comment
+        | isPrefix "/*"         = withLineType CSSComment
+        | isPrefix "function "  = withLineType FunctionStart
+        | isPrefix "component " = withLineType ComponentStart
+        | isPrefix "let "       = withLineType LetDeclaration
+        | isPrefix "const "     = withLineType ConstDeclaration
+        | otherwise             = withLineType CodeLine
         where rest = rmWhile (== ' ') xs
               nested = L.length xs - L.length rest
               isPrefix = (`L.isPrefixOf` rest)
-              construc x = x nested rest
+              withLineType x = Line {
+                                    lineType = x,
+                                    lineIndent = nested,
+                                    lineContent = rest }
 
     toLines :: L.Text -> [Line]
     toLines input = map toLine ls
         where ls = L.lines input
+
+    higherIndent a b = (lineIndent a) < (lineIndent b)
+
+    toBlocks :: [Line] -> [Block]
+    toBlocks []     = []
+    toBlocks all@(l:ls) = [newBlock] ++ (toBlocks next)
+        where newBlock = Block l (toBlocks $ inner)
+              inner = takeWhile (higherIndent l) ls
+              next = dropWhile (higherIndent l) ls
 
     tokenize = id

@@ -8,17 +8,22 @@ import qualified Data.Int as I
 type NestingLevel = I.Int64
 type LeftTrimmed = L.Text
 
-data Line =
-      CodeLine         NestingLevel LeftTrimmed
-    | Require          NestingLevel LeftTrimmed
-    | Include          NestingLevel LeftTrimmed
-    | Comment          NestingLevel LeftTrimmed
-    | CSSComment       NestingLevel LeftTrimmed
-    | FunctionStart    NestingLevel LeftTrimmed
-    | ComponentStart   NestingLevel LeftTrimmed
-    | LetDeclaration   NestingLevel LeftTrimmed
-    | ConstDeclaration NestingLevel LeftTrimmed
-    | FileStart        NestingLevel FilePath
+data LineType =
+      CodeLine
+    | Require
+    | Include
+    | Comment
+    | CSSComment
+    | FunctionStart
+    | ComponentStart
+    | LetDeclaration
+    | ConstDeclaration
     deriving (Show, Eq)
 
-data Block = Block Line [Block]
+data Line = Line {
+    lineIndent  :: NestingLevel,
+    lineContent :: LeftTrimmed,
+    lineType    :: LineType
+    } deriving (Show, Eq)
+
+data Block = Block Line [Block] deriving (Show, Eq)
