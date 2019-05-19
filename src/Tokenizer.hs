@@ -4,7 +4,8 @@ module Tokenizer (
       toLine
     , toLines
     , tokenize
-    , toBlocks) where
+    , toBlocks
+    , prettyShowAll) where
 
     import qualified Data.Text.Lazy as L
     import qualified Data.Int as I

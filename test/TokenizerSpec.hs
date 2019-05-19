@@ -9,7 +9,8 @@ import Tokenizer (
       toLine
     , toLines
     , tokenize
-    , toBlocks)
+    , toBlocks
+    , prettyShowAll)
 
 spec :: Spec
 spec = do
@@ -87,12 +88,12 @@ spec = do
     describe "toBlocks" $ do
         it "works with empty input" $ do
             let inputStr = ""
-                actual = toBlocks $ toLines inputStr
-                expected = [] :: [Block]
+                actual = prettyShowAll $ toBlocks $ toLines inputStr
+                expected = ""
             actual `shouldBe` expected
 
-        it "crteates nested Blocks" $ do
+        it "creates nested Blocks" $ do
             let inputStr = "level 1.0\nlevel 1.1\n   level 2.0\n   level 2.1\n     level 3.0"
-                actual = toBlocks $ toLines inputStr
-                expected = [] :: [Block]
+                actual = prettyShowAll $ toBlocks $ toLines inputStr
+                expected = "level 1.0\nlevel 1.1\n    level 2.0\n    level 2.1\n        level 3.0\n"
             actual `shouldBe` expected
